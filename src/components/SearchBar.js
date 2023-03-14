@@ -9,6 +9,7 @@ const SearchInput = styled.input`
   -moz-box-shadow: -2px 1px 57px -18px rgba(204,204,204,1);
   box-shadow: -2px 1px 57px -18px rgba(204,204,204,1);
   border:none;
+  box-sizing: border-box;
 `
 const SearchBar = ({searchValue, setSearchValue}) => {
     return (

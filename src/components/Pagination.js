@@ -2,18 +2,20 @@ import {useMemo} from "react";
 import {loadRepositoriesWithParams} from "../features/ReposSlice";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-
-const PAGE_SIZE=10;
+import { PAGE_SIZE } from '../helpters/useDebounce';
 
 const PageControlButtton = styled.button`
   background-color: #fff;
   padding: 10px;
-  min-width: 20px;
-  border:none;
+  min-width: 40px;
+  border: 1px solid #fff;
   cursor: pointer;
   border-bottom: ${props => props.disabled ? '1px solid green' : 'none'};
+  color: ${props => props.disabled ? 'green' : 'none'};
+  margin: 2px;
+
   &:hover {
-    background-color: #ccc;
+    border: 1px solid green;
   }
 `
 const Pagination = ({seachValue}) => {
@@ -24,7 +26,7 @@ const Pagination = ({seachValue}) => {
         const params = {
             q:seachValue,
             per_page: PAGE_SIZE,
-            page
+            page,
         };
         dispatch(loadRepositoriesWithParams(params));
     };

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import StartIcon from '../assets/star.png'
-import PersonIcon from '../assets/person.png'
+import PersonIcon from '../assets/person.png';
+import OpenExternally from '../assets/open-external-svgrepo-com.svg';
 
 
 const CardWrapper = styled.div`
@@ -43,17 +44,31 @@ const StatsColumn = styled.div`
 const StatIcon = styled.img`
     height: 24px;
 `;
+const RepoUrl = styled.a`
+  vertical-align: middle;
+  &:hover{
+    text-decoration: none;    
+  }
+  & img{
+    height: 18px;
+  }
+`;
+
+const LinkToRepo = ({repoURL}) => {
+    return (
+        <RepoUrl target="_blank" href={repoURL}><img src={OpenExternally} alt="icon"/></RepoUrl>
+    )
+}
 
 const RepoCard = ({repoData}) => {
-    const {owner, stargazers_count, watchers_count, language, description, full_name} = repoData;
-
+    const {owner, stargazers_count, watchers_count, language, description, full_name, html_url} = repoData;
     return(
         <CardWrapper>
             <div style={{height: '150px', maxWidth: '140px'}}>
                 <RepoLogo src={owner.avatar_url} alt=""/>
             </div>
             <MainDataColumn>
-                <DataParagraph><b>{full_name}</b></DataParagraph>
+                <DataParagraph><b>{full_name}</b> <LinkToRepo repoURL={html_url}/></DataParagraph>
                 <DataParagraph>Author: {owner.login}</DataParagraph>
                 <DataParagraph>Language: {language}</DataParagraph>
                 <DataParagraph>Description: <br/> {description}</DataParagraph>
