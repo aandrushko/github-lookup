@@ -17,7 +17,7 @@ const PageControlButtton = styled.button`
   }
 `
 const Pagination = ({seachValue}) => {
-    const {currentPage, repositories, isLoadingRepositories, totalAmount} = useSelector((state) => state.repositories);
+    const {currentPage, repositories, totalAmount} = useSelector((state) => state.repositories);
     const dispatch = useDispatch();
     const isTheLastPage = useMemo(() =>  Math.ceil(totalAmount/PAGE_SIZE) === currentPage, [currentPage, totalAmount]);
     const handlePageChange = (page) => {
