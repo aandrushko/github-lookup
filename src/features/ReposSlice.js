@@ -7,22 +7,25 @@ const initState = {
   totalAmount: 0,
   repositories: [],
   currentPage: 0,
+  errorMessage: '',
 };
 export const loadRepositoriesWithParams = createAsyncThunk(
   "repositories/loadWithParams",
-  async (params) => {
+  async (params, thunkAPI) => {
     if (params.q.replace(" ", "").length < 1) return initState;
     try {
-      const { page } = params;
-      const { data } = await getRepositories({ per_page: 20, ...params });
-
-      return {
-        repositories: data.items,
-        totalAmount: data.total_count,
-        currentPage: page,
-      };
+      const { page, q, per_page } = params;
+      const response = await getRepositories({ per_page, q,page });
+      const {data} = response;
+      if (response.status === 200) {
+        return {
+          repositories: data.items,
+              totalAmount: data.total_count,
+              currentPage: page
+        };
+      }
     } catch (e) {
-      console.log(e);
+      return thunkAPI.rejectWithValue(e.response?.data?.message || "Unknown error")
     }
   }
 );
@@ -32,7 +35,9 @@ const repositoriesSlice = createSlice({
   initialState: initState,
   reducers: {
     reset(state) {
-      state = initState;
+      state.repositories = [];
+      state.totalAmount = 0;
+      state.errorMessage = "";
     },
   },
   extraReducers: (builder) => {
@@ -46,8 +51,12 @@ const repositoriesSlice = createSlice({
       state.isLoadingRepositories = false;
       state.repositories = repositories;
       state.totalAmount = totalAmount;
+      if (state.errorMessage.length > 0) {
+        state.errorMessage = ''
+      }
     });
-    builder.addCase(loadRepositoriesWithParams.rejected, (state) => {
+    builder.addCase(loadRepositoriesWithParams.rejected, (state, action) => {
+      state.errorMessage = action.payload;
       state.isLoadingRepositories = false;
       state.isFailedToLoad = true;
     });

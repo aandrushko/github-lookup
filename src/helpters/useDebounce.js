@@ -15,5 +15,5 @@ const useDebounce = (value, delay) => {
 
   return debouncedValue;
 };
-
+export const PAGE_SIZE = 20;
 export default useDebounce;
